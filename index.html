@@ -5,6 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OLTのbloxd.ioの開発web</title>
 </head>
+    <style>
+    body {
+        font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", sans-serif;
+        background: #f5f7fa;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    /* コンテナ */
+    body > * {
+        max-width: 700px;
+        margin: 0 auto 20px auto;
+    }
+
+    /* 見出し */
+    h2 {
+        background: #ffffff;
+        padding: 15px;
+        border-left: 5px solid #4CAF50;
+        border-radius: 8px 8px 0 0;
+        margin-bottom: 0;
+    }
+
+    /* セクション（pをカード化） */
+    p {
+        background: #ffffff;
+        padding: 15px;
+        margin-top: 0;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* リンクをボタン風に */
+    a {
+        display: inline-block;
+        text-decoration: none;
+        background: #4CAF50;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 6px;
+        transition: 0.2s;
+        font-weight: bold;
+    }
+
+    a:hover {
+        background: #45a049;
+        transform: translateY(-1px);
+    }
+
+    /* GitHubリンクなど */
+    body > text, body > a:last-child {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    /* 戻るリンク */
+    a[href*="github"] {
+        background: #333;
+    }
+
+    a[href*="github"]:hover {
+        background: #555;
+    }
+</style>
 <body>
     <h2>ブロックベンチの骨の名前変換</h2>
     <p><a href="OLTbloxd.io/playeranimesion.html">ここをクリック!</a></p>
