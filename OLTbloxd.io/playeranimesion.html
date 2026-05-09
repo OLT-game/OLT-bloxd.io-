@@ -1,21 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bone Name Converter</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: #0f1117;
+      color: #f1f5f9;
+      font-family:
+        "Inter",
+        "Noto Sans JP",
+        sans-serif;
+
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      color: #94a3b8;
+      margin-bottom: 30px;
+      line-height: 1.7;
+    }
+
+    .editor-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: #161b22;
+      border: 1px solid #2b3240;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .panel-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid #2b3240;
+      background: #1d2430;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    textarea,
+    .output {
+      width: 100%;
+      min-height: 500px;
+      padding: 18px;
+      border: none;
+      outline: none;
+      resize: vertical;
+
+      background: transparent;
+      color: #e2e8f0;
+
+      font-size: 15px;
+      line-height: 1.7;
+      font-family:
+        "JetBrains Mono",
+        "Consolas",
+        monospace;
+    }
+
+    textarea::placeholder {
+      color: #64748b;
+    }
+
+    .output {
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    .button-row {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+
+      background: linear-gradient(
+        135deg,
+        #3b82f6,
+        #2563eb
+      );
+
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+
+      transition:
+        transform 0.15s,
+        opacity 0.15s,
+        box-shadow 0.15s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.95;
+      box-shadow:
+        0 8px 20px rgba(37,99,235,0.35);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .success {
+      color: #22c55e;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    @media (max-width: 850px) {
+      .editor-area {
+        grid-template-columns: 1fr;
+      }
+
+      textarea,
+      .output {
+        min-height: 320px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <textarea id="input"></textarea>
-  <button id="copy">コピー</button>
-  <div id="box" style="white-space: pre-wrap;"></div>
+  <div class="container">
+
+    <div class="title">
+      Bone Name Converter
+    </div>
+
+    <div class="description">
+      bone名の自動変換と、小数点を2桁へ丸めるツールです。
+    </div>
+
+    <div class="editor-area">
+
+      <div class="panel">
+        <div class="panel-header">
+          INPUT
+        </div>
+
+        <textarea
+          id="input"
+          placeholder="ここにコードを貼り付け..."
+        ></textarea>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          OUTPUT
+        </div>
+
+        <div
+          id="box"
+          class="output"
+        ></div>
+      </div>
+
+    </div>
+
+    <div class="button-row">
+      <button id="copy">
+        コピー
+      </button>
+
+      <div
+        id="status"
+        class="success"
+      ></div>
+    </div>
+
+  </div>
 
   <script>
     const input = document.getElementById("input");
     const box = document.getElementById("box");
     const copyBtn = document.getElementById("copy");
+    const status = document.getElementById("status");
 
     input.addEventListener("input", e => {
+
       let text = e.target.value
         .replaceAll("body", "TorsoNode")
         .replaceAll("head", "HeadMesh")
@@ -24,15 +225,35 @@
         .replaceAll("rightLeg", "LegRightMesh")
         .replaceAll("leftLeg", "LegLeftMesh");
 
-      text = text.replace(/-?\d+\.\d+/g, num => {
-        return Math.floor(parseFloat(num) * 100) / 100;
-      });
+      text = text.replace(
+        /-?\d+\.\d+/g,
+        num => {
+          return (
+            Math.floor(parseFloat(num) * 100) / 100
+          );
+        }
+      );
 
       box.textContent = text;
     });
 
-    copyBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText(box.textContent);
+    copyBtn.addEventListener("click", async () => {
+
+      try {
+        await navigator.clipboard.writeText(
+          box.textContent
+        );
+
+        status.textContent = "コピーしました";
+
+        setTimeout(() => {
+          status.textContent = "";
+        }, 2000);
+
+      } catch {
+        status.textContent = "コピーに失敗しました";
+      }
+
     });
   </script>
 </body>
